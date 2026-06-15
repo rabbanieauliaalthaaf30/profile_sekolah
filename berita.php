@@ -112,7 +112,14 @@ $categories = fetchAll("SELECT * FROM kategori_berita ORDER BY nama_kategori ASC
                                 <div class="row g-0">
                                     <div class="col-md-4">
                                         <div class="card-img-wrapper">
-                                            <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=400&h=250&fit=crop" class="img-fluid w-100 h-100" alt="<?php echo clean($item['judul']); ?>" style="object-fit: cover;">
+                                            <?php $img_berita = !empty($item['foto_utama']) ? SITE_URL . '/uploads/berita/' . clean($item['foto_utama']) : ''; ?>
+                                            <?php if ($img_berita): ?>
+                                            <img src="<?php echo $img_berita; ?>" class="img-fluid w-100 h-100" alt="<?php echo clean($item['judul']); ?>" style="object-fit: cover;">
+                                            <?php else: ?>
+                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center" style="background:#f1f5f9; min-height:160px; color:#94a3b8;">
+                                                <i class="fas fa-image fa-2x"></i>
+                                            </div>
+                                            <?php endif; ?>
                                             <span class="card-badge"><?php echo clean($item['nama_kategori'] ?? 'Umum'); ?></span>
                                         </div>
                                     </div>

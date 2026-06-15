@@ -24,8 +24,8 @@ $current_user = fetch("SELECT * FROM users WHERE id = " . (int)$_SESSION['user_i
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <i class="fas fa-school me-2"></i>
-            <span><?php echo clean(limitText($profil['nama_sekolah'] ?? 'Admin Panel', 20)); ?></span>
+            <i class="fas fa-school me-2" style="flex-shrink:0;"></i>
+            <span><?php echo clean($profil['nama_sekolah'] ?? 'Admin Panel'); ?></span>
         </div>
 
         <nav class="sidebar-nav">
@@ -82,7 +82,7 @@ $current_user = fetch("SELECT * FROM users WHERE id = " . (int)$_SESSION['user_i
             <a href="<?php echo SITE_URL; ?>" target="_blank" class="nav-item">
                 <i class="fas fa-external-link-alt"></i><span>Lihat Website</span>
             </a>
-            <a href="<?php echo SITE_URL; ?>/admin/logout.php" class="nav-item text-danger">
+            <a href="<?php echo SITE_URL; ?>/admin/logout.php" class="nav-item text-danger btn-logout-confirm">
                 <i class="fas fa-sign-out-alt"></i><span>Logout</span>
             </a>
         </nav>
@@ -132,7 +132,7 @@ $current_user = fetch("SELECT * FROM users WHERE id = " . (int)$_SESSION['user_i
                         <li><a class="dropdown-item" href="<?php echo SITE_URL; ?>/admin/profil-saya.php"><i class="fas fa-user me-2"></i>Profil Saya</a></li>
                         <li><a class="dropdown-item" href="<?php echo SITE_URL; ?>/admin/ganti-password.php"><i class="fas fa-key me-2"></i>Ganti Password</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="<?php echo SITE_URL; ?>/admin/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        <li><a class="dropdown-item text-danger btn-logout-confirm" href="<?php echo SITE_URL; ?>/admin/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                     </ul>
                 </div>
             </div>

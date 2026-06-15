@@ -9,17 +9,8 @@ $where = $kategori_filter ? "WHERE kategori = '$kategori_filter'" : '';
 $galeri = fetchAll("SELECT * FROM galeri $where ORDER BY tanggal_kegiatan DESC, created_at DESC");
 $kategori_list = fetchAll("SELECT DISTINCT kategori FROM galeri WHERE kategori IS NOT NULL AND kategori != '' ORDER BY kategori ASC");
 
-// Dummy images from Unsplash
-$dummy_images = [
-    'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=600&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1588072432836-e10032774350?w=600&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=400&fit=crop',
-];
+// Placeholder jika foto tidak tersedia
+$placeholder_img = 'https://via.placeholder.com/600x400?text=Tidak+Ada+Foto';
 ?>
 
 <!-- Page Header -->
@@ -58,9 +49,15 @@ $dummy_images = [
                 </div>
             <?php else: ?>
                 <?php foreach ($galeri as $index => $item): ?>
+                <?php
+                    // Gunakan foto dari database, fallback ke placeholder
+                    $img_src = !empty($item['foto'])
+                        ? SITE_URL . '/uploads/galeri/' . clean($item['foto'])
+                        : $placeholder_img;
+                ?>
                 <div class="col-lg-4 col-md-6 galeri-item" data-kategori="<?php echo clean($item['kategori']); ?>" data-aos="fade-up" data-aos-delay="<?php echo ($index % 3) * 100; ?>">
                     <div class="gallery-item">
-                        <img src="<?php echo $dummy_images[$index % count($dummy_images)]; ?>" alt="<?php echo clean($item['judul']); ?>" class="gallery-img">
+                        <img src="<?php echo $img_src; ?>" alt="<?php echo clean($item['judul']); ?>" class="gallery-img">
                         <div class="gallery-overlay">
                             <div class="gallery-info">
                                 <h5 class="gallery-title"><?php echo clean($item['judul']); ?></h5>
@@ -71,7 +68,7 @@ $dummy_images = [
                                 <?php if ($item['deskripsi']): ?>
                                 <p class="small mt-2"><?php echo clean(limitText($item['deskripsi'], 80)); ?></p>
                                 <?php endif; ?>
-                                <button class="btn btn-sm btn-light mt-2" onclick="openLightbox('<?php echo $dummy_images[$index % count($dummy_images)]; ?>', '<?php echo clean($item['judul']); ?>')">
+                                <button class="btn btn-sm btn-light mt-2" onclick="openLightbox('<?php echo $img_src; ?>', '<?php echo clean($item['judul']); ?>')">
                                     <i class="fas fa-expand me-1"></i>Perbesar
                                 </button>
                             </div>

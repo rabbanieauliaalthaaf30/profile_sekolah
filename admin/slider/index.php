@@ -82,7 +82,8 @@ if (isset($_GET['hapus'])) {
                          style="width:100%; height:200px; object-fit:cover; display:block;">
                     <!-- Tombol hapus -->
                     <a href="?hapus=<?php echo $no; ?>"
-                       onclick="return confirm('Hapus foto Slide <?php echo $no; ?>?')"
+                       class="btn-confirm-delete"
+                       data-name="foto Slide <?php echo $no; ?>"
                        style="position:absolute; top:10px; right:10px; background:rgba(239,68,68,0.9); color:white; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; text-decoration:none;"
                        title="Hapus Foto">
                         <i class="fas fa-trash" style="font-size:13px;"></i>

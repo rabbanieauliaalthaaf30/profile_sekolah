@@ -62,13 +62,13 @@ function getFotoGuru($foto, $nama, $folder = 'guru') {
                             <i class="fas fa-graduation-cap me-1 text-muted"></i>
                             <?php echo clean($g['pendidikan_terakhir'] ?? '-'); ?>
                         </div>
+                        <div class="mt-auto pt-3 w-100">
                         <?php if ($g['email']): ?>
-                        <div class="mt-2">
-                            <a href="mailto:<?php echo clean($g['email']); ?>" class="text-primary small">
+                            <a href="mailto:<?php echo clean($g['email']); ?>" class="text-primary small d-block">
                                 <i class="fas fa-envelope me-1"></i><?php echo clean($g['email']); ?>
                             </a>
-                        </div>
                         <?php endif; ?>
+                        </div>
                     </div>
                 </div>
                 <?php endforeach; ?>
@@ -99,18 +99,18 @@ function getFotoGuru($foto, $nama, $folder = 'guru') {
                              onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($s['nama_lengkap']); ?>&size=300&background=d97706&color=fff&bold=true&length=2'">
                         <div class="teacher-name"><?php echo clean($s['nama_lengkap']); ?></div>
                         <div class="teacher-subject" style="color: #d97706;"><?php echo clean($s['jabatan']); ?></div>
+                        <div class="mt-auto pt-3 w-100">
                         <?php if ($s['telepon']): ?>
-                        <div class="mt-2 text-muted small">
-                            <i class="fas fa-phone me-1"></i><?php echo clean($s['telepon']); ?>
-                        </div>
+                            <div class="text-muted small mb-1">
+                                <i class="fas fa-phone me-1"></i><?php echo clean($s['telepon']); ?>
+                            </div>
                         <?php endif; ?>
                         <?php if ($s['email']): ?>
-                        <div class="mt-1">
-                            <a href="mailto:<?php echo clean($s['email']); ?>" class="small" style="color: #d97706;">
+                            <a href="mailto:<?php echo clean($s['email']); ?>" class="small d-block" style="color: #d97706;">
                                 <i class="fas fa-envelope me-1"></i><?php echo clean($s['email']); ?>
                             </a>
-                        </div>
                         <?php endif; ?>
+                        </div>
                     </div>
                 </div>
                 <?php endforeach; ?>

@@ -35,16 +35,137 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }, 4000);
 
-    // Confirm delete
-    document.querySelectorAll('.btn-confirm-delete').forEach(btn => {
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            const url  = this.getAttribute('href');
-            const name = this.getAttribute('data-name') || 'data ini';
-            if (confirm('Yakin ingin menghapus ' + name + '? Tindakan ini tidak dapat dibatalkan.')) {
-                window.location.href = url;
-            }
-        });
+    // ========== LOGOUT CONFIRMATION MODAL ==========
+    const logoutModal = document.createElement('div');
+    logoutModal.id = 'logoutConfirmModal';
+    logoutModal.innerHTML = `
+        <div class="logout-modal-overlay" id="logoutModalOverlay">
+            <div class="logout-modal-box">
+                <div class="logout-modal-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+                <h5 class="logout-modal-title">Keluar dari Panel Admin?</h5>
+                <p class="logout-modal-msg">Sesi Anda akan diakhiri dan Anda perlu login kembali untuk mengakses panel admin.</p>
+                <div class="logout-modal-actions">
+                    <button class="btn-logout-cancel" id="logoutModalCancel">
+                        <i class="fas fa-times me-1"></i> Batal
+                    </button>
+                    <button class="btn-logout-confirm-btn" id="logoutModalConfirm">
+                        <i class="fas fa-sign-out-alt me-1"></i> Ya, Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(logoutModal);
+
+    let logoutTargetUrl = null;
+
+    function openLogoutModal(url) {
+        logoutTargetUrl = url;
+        document.getElementById('logoutModalOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLogoutModal() {
+        document.getElementById('logoutModalOverlay').classList.remove('active');
+        document.body.style.overflow = '';
+        logoutTargetUrl = null;
+    }
+
+    document.getElementById('logoutModalCancel').addEventListener('click', closeLogoutModal);
+    document.getElementById('logoutModalOverlay').addEventListener('click', function (e) {
+        if (e.target === this) closeLogoutModal();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && document.getElementById('logoutModalOverlay').classList.contains('active')) {
+            closeLogoutModal();
+        }
+    });
+
+    document.getElementById('logoutModalConfirm').addEventListener('click', function () {
+        if (logoutTargetUrl) {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Keluar...';
+            this.disabled = true;
+            window.location.href = logoutTargetUrl;
+        }
+    });
+
+    document.body.addEventListener('click', function (e) {
+        const btn = e.target.closest('.btn-logout-confirm');
+        if (!btn) return;
+        e.preventDefault();
+        openLogoutModal(btn.getAttribute('href'));
+    });
+
+    // ========== MODERN DELETE CONFIRMATION MODAL ==========
+    // Create modal HTML once
+    const deleteModal = document.createElement('div');
+    deleteModal.id = 'deleteConfirmModal';
+    deleteModal.innerHTML = `
+        <div class="delete-modal-overlay" id="deleteModalOverlay">
+            <div class="delete-modal-box">
+                <div class="delete-modal-icon">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <h5 class="delete-modal-title">Hapus Data</h5>
+                <p class="delete-modal-msg" id="deleteModalMsg">Yakin ingin menghapus data ini?</p>
+                <p class="delete-modal-sub">Tindakan ini tidak dapat dibatalkan.</p>
+                <div class="delete-modal-actions">
+                    <button class="btn-modal-cancel" id="deleteModalCancel">
+                        <i class="fas fa-times me-1"></i> Batal
+                    </button>
+                    <button class="btn-modal-confirm" id="deleteModalConfirm">
+                        <i class="fas fa-trash-alt me-1"></i> Ya, Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(deleteModal);
+
+    let deleteTargetUrl = null;
+
+    function openDeleteModal(url, name) {
+        deleteTargetUrl = url;
+        const msg = document.getElementById('deleteModalMsg');
+        msg.textContent = 'Yakin ingin menghapus ' + name + '?';
+        const overlay = document.getElementById('deleteModalOverlay');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDeleteModal() {
+        const overlay = document.getElementById('deleteModalOverlay');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        deleteTargetUrl = null;
+    }
+
+    document.getElementById('deleteModalCancel').addEventListener('click', closeDeleteModal);
+    document.getElementById('deleteModalOverlay').addEventListener('click', function (e) {
+        if (e.target === this) closeDeleteModal();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeDeleteModal();
+    });
+
+    document.getElementById('deleteModalConfirm').addEventListener('click', function () {
+        if (deleteTargetUrl) {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Menghapus...';
+            this.disabled = true;
+            window.location.href = deleteTargetUrl;
+        }
+    });
+
+    // Attach to all delete buttons (including dynamically added ones via delegation)
+    document.body.addEventListener('click', function (e) {
+        const btn = e.target.closest('.btn-confirm-delete');
+        if (!btn) return;
+        e.preventDefault();
+        const url  = btn.getAttribute('href');
+        const name = btn.getAttribute('data-name') || 'data ini';
+        openDeleteModal(url, name);
     });
 
     // Image preview on file select

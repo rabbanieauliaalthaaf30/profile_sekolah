@@ -142,7 +142,12 @@ $total_prestasi = fetch("SELECT COUNT(*) as total FROM prestasi WHERE tahun >= Y
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-5 mb-4 mb-lg-0" data-aos="fade-right">
-                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&h=700&fit=crop" alt="Kepala Sekolah" class="img-fluid rounded shadow">
+                <?php
+                $foto_kepsek = !empty($profil['kepala_sekolah_foto'])
+                    ? SITE_URL . '/uploads/profil/' . clean($profil['kepala_sekolah_foto'])
+                    : 'https://ui-avatars.com/api/?name=' . urlencode($profil['kepala_sekolah_nama'] ?? 'Kepala Sekolah') . '&size=600&background=2563eb&color=fff&bold=true&length=2';
+                ?>
+                <img src="<?php echo $foto_kepsek; ?>" alt="Kepala Sekolah" class="img-fluid rounded shadow">
             </div>
             
             <div class="col-lg-7" data-aos="fade-left">
@@ -196,7 +201,14 @@ $total_prestasi = fetch("SELECT COUNT(*) as total FROM prestasi WHERE tahun >= Y
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="<?php echo $index * 100; ?>">
                     <div class="card news-card h-100">
                         <div class="card-img-wrapper">
-                            <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=400&h=250&fit=crop" class="card-img-top" alt="<?php echo clean($news['judul']); ?>">
+                            <?php $img_news = !empty($news['foto_utama']) ? SITE_URL . '/uploads/berita/' . clean($news['foto_utama']) : ''; ?>
+                            <?php if ($img_news): ?>
+                            <img src="<?php echo $img_news; ?>" class="card-img-top" alt="<?php echo clean($news['judul']); ?>">
+                            <?php else: ?>
+                            <div class="card-img-top d-flex align-items-center justify-content-center" style="height:200px; background:linear-gradient(135deg,#dbeafe,#bfdbfe); color:#2563eb;">
+                                <i class="fas fa-newspaper fa-3x opacity-50"></i>
+                            </div>
+                            <?php endif; ?>
                             <span class="card-badge"><?php echo clean($news['nama_kategori'] ?? 'Umum'); ?></span>
                         </div>
                         <div class="card-body">

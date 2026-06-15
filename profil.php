@@ -28,7 +28,18 @@ $fasilitas = fetchAll("SELECT * FROM fasilitas ORDER BY urutan ASC");
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
-                <img src="https://images.unsplash.com/photo-1562774053-701939374585?w=800&h=600&fit=crop" alt="Gedung Sekolah" class="img-fluid rounded shadow">
+                <?php
+                $foto_gedung_url = !empty($profil['foto_gedung'])
+                    ? SITE_URL . '/uploads/profil/' . clean($profil['foto_gedung'])
+                    : null;
+                ?>
+                <?php if ($foto_gedung_url): ?>
+                <img src="<?php echo $foto_gedung_url; ?>" alt="Gedung Sekolah" class="img-fluid rounded shadow">
+                <?php else: ?>
+                <div class="rounded shadow d-flex align-items-center justify-content-center" style="height:400px; background:linear-gradient(135deg,#dbeafe,#bfdbfe); color:#2563eb;">
+                    <div class="text-center"><i class="fas fa-school fa-5x opacity-50 mb-3"></i><p class="fw-semibold">Foto Gedung Sekolah</p></div>
+                </div>
+                <?php endif; ?>
             </div>
             
             <div class="col-lg-6" data-aos="fade-left">

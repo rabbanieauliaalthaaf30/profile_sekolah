@@ -27,13 +27,16 @@ $page_title = $berita['judul'];
 query("UPDATE berita SET views = views + 1 WHERE id = " . $berita['id']);
 
 // Get related news
-$related = fetchAll("SELECT b.*, k.nama_kategori
-                     FROM berita b
-                     LEFT JOIN kategori_berita k ON b.kategori_id = k.id
-                     WHERE b.status = 'published' AND b.id != " . $berita['id'] . "
-                     AND b.kategori_id = " . ($berita['kategori_id'] ?? 0) . "
-                     ORDER BY b.tanggal_publish DESC
-                     LIMIT 3");
+$related = [];
+if (!empty($berita['kategori_id'])) {
+    $related = fetchAll("SELECT b.*, k.nama_kategori
+                         FROM berita b
+                         LEFT JOIN kategori_berita k ON b.kategori_id = k.id
+                         WHERE b.status = 'published' AND b.id != " . $berita['id'] . "
+                         AND b.kategori_id = " . (int)$berita['kategori_id'] . "
+                         ORDER BY b.tanggal_publish DESC
+                         LIMIT 3");
+}
 ?>
 
 <!-- Page Header -->
@@ -57,9 +60,11 @@ $related = fetchAll("SELECT b.*, k.nama_kategori
             <div class="col-lg-8 mb-4" data-aos="fade-right">
                 <article class="berita-detail-card">
                     <!-- Featured Image -->
+                    <?php if (!empty($berita['foto_utama'])): ?>
                     <div class="berita-detail-img mb-4">
-                        <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=800&h=450&fit=crop" alt="<?php echo clean($berita['judul']); ?>" class="img-fluid rounded shadow w-100" style="height: 400px; object-fit: cover;">
+                        <img src="<?php echo SITE_URL . '/uploads/berita/' . clean($berita['foto_utama']); ?>" alt="<?php echo clean($berita['judul']); ?>" class="img-fluid rounded shadow w-100" style="height: 400px; object-fit: cover;">
                     </div>
+                    <?php endif; ?>
 
                     <!-- Meta Info -->
                     <div class="berita-detail-meta mb-4">
@@ -102,7 +107,12 @@ $related = fetchAll("SELECT b.*, k.nama_kategori
                         <?php foreach ($related as $rel): ?>
                         <div class="col-md-4">
                             <div class="card h-100 border-0 shadow-sm">
-                                <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=400&h=200&fit=crop" class="card-img-top" alt="<?php echo clean($rel['judul']); ?>" style="height: 150px; object-fit: cover;">
+                                <?php $img_rel = !empty($rel['foto_utama']) ? SITE_URL . '/uploads/berita/' . clean($rel['foto_utama']) : ''; ?>
+                                <?php if ($img_rel): ?>
+                                <img src="<?php echo $img_rel; ?>" class="card-img-top" alt="<?php echo clean($rel['judul']); ?>" style="height: 150px; object-fit: cover;">
+                                <?php else: ?>
+                                <div style="height:150px; background:#f1f5f9; display:flex; align-items:center; justify-content:center; color:#94a3b8;"><i class="fas fa-image fa-2x"></i></div>
+                                <?php endif; ?>
                                 <div class="card-body p-3">
                                     <small class="text-muted"><?php echo formatTanggal($rel['tanggal_publish']); ?></small>
                                     <h6 class="mt-1 mb-2">
@@ -136,7 +146,12 @@ $related = fetchAll("SELECT b.*, k.nama_kategori
                         </h5>
                         <?php foreach ($latest as $l): ?>
                         <div class="d-flex gap-3 mb-3 pb-3 border-bottom">
-                            <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=80&h=80&fit=crop" alt="" class="rounded" style="width: 70px; height: 70px; object-fit: cover; flex-shrink: 0;">
+                            <?php $img_latest = !empty($l['foto_utama']) ? SITE_URL . '/uploads/berita/' . clean($l['foto_utama']) : ''; ?>
+                            <?php if ($img_latest): ?>
+                            <img src="<?php echo $img_latest; ?>" alt="" class="rounded" style="width: 70px; height: 70px; object-fit: cover; flex-shrink: 0;">
+                            <?php else: ?>
+                            <div class="rounded" style="width:70px; height:70px; background:#f1f5f9; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#94a3b8;"><i class="fas fa-image"></i></div>
+                            <?php endif; ?>
                             <div>
                                 <a href="<?php echo SITE_URL; ?>/berita-detail.php?slug=<?php echo $l['slug']; ?>" class="text-dark small fw-semibold">
                                     <?php echo clean(limitText($l['judul'], 65)); ?>

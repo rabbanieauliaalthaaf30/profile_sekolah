@@ -47,6 +47,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // Upload Foto Kepala Sekolah
+    $kepala_sekolah_foto = $profil['kepala_sekolah_foto'] ?? '';
+    if (!empty($_FILES['kepala_sekolah_foto']['name'])) {
+        $upload3 = uploadFile($_FILES['kepala_sekolah_foto'], UPLOAD_PATH . 'profil/');
+        if ($upload3['success']) {
+            if ($kepala_sekolah_foto) deleteFile(UPLOAD_PATH . 'profil/' . $kepala_sekolah_foto);
+            $kepala_sekolah_foto = $upload3['filename'];
+        } else {
+            $errors[] = 'Foto kepala sekolah: ' . $upload3['message'];
+        }
+    }
+
     if (empty($errors)) {
         if ($profil) {
             // Update existing
@@ -54,15 +66,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                    nama_sekolah='$nama_sekolah', npsn='$npsn', sejarah='$sejarah', visi='$visi', misi='$misi',
                    alamat_lengkap='$alamat_lengkap', telepon='$telepon', email='$email', website='$website',
                    kepala_sekolah_nama='$kepala_sekolah_nama', tahun_berdiri=" . ($tahun_berdiri ?: 'NULL') . ",
-                   akreditasi='$akreditasi', logo='$logo', foto_gedung='$foto_gedung'
+                   akreditasi='$akreditasi', logo='$logo', foto_gedung='$foto_gedung',
+                   kepala_sekolah_foto='$kepala_sekolah_foto'
                    WHERE id={$profil['id']}");
             logActivity($_SESSION['user_id'], 'EDIT', 'profil_sekolah', $profil['id'], "Memperbarui profil sekolah");
         } else {
             // Insert new
             query("INSERT INTO profil_sekolah (nama_sekolah, npsn, sejarah, visi, misi, alamat_lengkap, telepon, email, website,
-                   kepala_sekolah_nama, tahun_berdiri, akreditasi, logo, foto_gedung)
+                   kepala_sekolah_nama, tahun_berdiri, akreditasi, logo, foto_gedung, kepala_sekolah_foto)
                    VALUES ('$nama_sekolah', '$npsn', '$sejarah', '$visi', '$misi', '$alamat_lengkap', '$telepon', '$email', '$website',
-                   '$kepala_sekolah_nama', " . ($tahun_berdiri ?: 'NULL') . ", '$akreditasi', '$logo', '$foto_gedung')");
+                   '$kepala_sekolah_nama', " . ($tahun_berdiri ?: 'NULL') . ", '$akreditasi', '$logo', '$foto_gedung', '$kepala_sekolah_foto')");
             logActivity($_SESSION['user_id'], 'TAMBAH', 'profil_sekolah', lastInsertId(), "Membuat profil sekolah");
         }
 
@@ -183,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Foto Gedung -->
             <div class="admin-card mb-4">
-                <div class="admin-card-header"><div class="admin-card-title"><i class="fas fa-building"></i> Foto Gedung</div></div>
+                <div class="admin-card-header"><div class="admin-card-title"><i class="fas fa-building"></i> Foto Gedung Sekolah</div></div>
                 <div class="admin-card-body">
                     <?php if (!empty($profil['foto_gedung'])): ?>
                     <img id="gedungPreview" src="<?php echo SITE_URL; ?>/uploads/profil/<?php echo clean($profil['foto_gedung']); ?>"
@@ -196,6 +209,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
                     <input type="file" name="foto_gedung" class="form-control" accept="image/*" onchange="previewImg(this,'gedungPreview','gedungPlaceholder')">
                     <small class="text-muted">Format: JPG, PNG. Max 5MB</small>
+                </div>
+            </div>
+
+            <!-- Foto Kepala Sekolah -->
+            <div class="admin-card mb-4">
+                <div class="admin-card-header"><div class="admin-card-title"><i class="fas fa-user-tie"></i> Foto Kepala Sekolah</div></div>
+                <div class="admin-card-body">
+                    <?php if (!empty($profil['kepala_sekolah_foto'])): ?>
+                    <img id="kepsekPreview" src="<?php echo SITE_URL; ?>/uploads/profil/<?php echo clean($profil['kepala_sekolah_foto']); ?>"
+                         class="img-fluid rounded mb-2 w-100" style="height:150px; object-fit:cover; object-position:top;">
+                    <?php else: ?>
+                    <img id="kepsekPreview" src="" alt="" class="img-fluid rounded mb-2" style="display:none; width:100%; height:150px; object-fit:cover;">
+                    <div id="kepsekPlaceholder" class="rounded d-flex align-items-center justify-content-center mb-2" style="height:120px; border:2px dashed #e5e7eb; background:#f9fafb; color:#9ca3af;">
+                        <div class="text-center"><i class="fas fa-user-tie fa-2x mb-1"></i><div class="small">Upload foto kepala sekolah</div></div>
+                    </div>
+                    <?php endif; ?>
+                    <input type="file" name="kepala_sekolah_foto" class="form-control" accept="image/*" onchange="previewImg(this,'kepsekPreview','kepsekPlaceholder')">
+                    <small class="text-muted">Foto ditampilkan di halaman Beranda. Format: JPG, PNG. Max 5MB</small>
                 </div>
             </div>
 
