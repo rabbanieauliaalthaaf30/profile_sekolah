@@ -35,17 +35,8 @@ $current_user = fetch("SELECT * FROM users WHERE id = " . (int)$_SESSION['user_i
             </a>
 
             <div class="nav-label">Konten</div>
-            <a href="<?php echo SITE_URL; ?>/admin/berita/index.php" class="nav-item <?php echo ($active_menu ?? '') == 'berita' ? 'active' : ''; ?>">
-                <i class="fas fa-newspaper"></i><span>Berita</span>
-            </a>
-            <a href="<?php echo SITE_URL; ?>/admin/slider/index.php" class="nav-item <?php echo ($active_menu ?? '') == 'slider' ? 'active' : ''; ?>">
-                <i class="fas fa-images"></i><span>Slider Homepage</span>
-            </a>
             <a href="<?php echo SITE_URL; ?>/admin/galeri/index.php" class="nav-item <?php echo ($active_menu ?? '') == 'galeri' ? 'active' : ''; ?>">
                 <i class="fas fa-images"></i><span>Galeri</span>
-            </a>
-            <a href="<?php echo SITE_URL; ?>/admin/prestasi/index.php" class="nav-item <?php echo ($active_menu ?? '') == 'prestasi' ? 'active' : ''; ?>">
-                <i class="fas fa-trophy"></i><span>Prestasi</span>
             </a>
 
             <div class="nav-label">Komunikasi</div>
@@ -61,20 +52,17 @@ $current_user = fetch("SELECT * FROM users WHERE id = " . (int)$_SESSION['user_i
             <a href="<?php echo SITE_URL; ?>/admin/profil/index.php" class="nav-item <?php echo ($active_menu ?? '') == 'profil' ? 'active' : ''; ?>">
                 <i class="fas fa-school"></i><span>Profil Sekolah</span>
             </a>
+            <a href="<?php echo SITE_URL; ?>/admin/slider/index.php" class="nav-item <?php echo ($active_menu ?? '') == 'slider' ? 'active' : ''; ?>">
+                <i class="fas fa-images"></i><span>Slider Homepage</span>
+            </a>
             <a href="<?php echo SITE_URL; ?>/admin/guru/index.php" class="nav-item <?php echo ($active_menu ?? '') == 'guru' ? 'active' : ''; ?>">
                 <i class="fas fa-chalkboard-teacher"></i><span>Data Guru</span>
-            </a>
-            <a href="<?php echo SITE_URL; ?>/admin/staff/index.php" class="nav-item <?php echo ($active_menu ?? '') == 'staff' ? 'active' : ''; ?>">
-                <i class="fas fa-user-tie"></i><span>Data Staff</span>
             </a>
             <a href="<?php echo SITE_URL; ?>/admin/fasilitas/index.php" class="nav-item <?php echo ($active_menu ?? '') == 'fasilitas' ? 'active' : ''; ?>">
                 <i class="fas fa-building"></i><span>Fasilitas</span>
             </a>
             <a href="<?php echo SITE_URL; ?>/admin/users/index.php" class="nav-item <?php echo ($active_menu ?? '') == 'users' ? 'active' : ''; ?>">
                 <i class="fas fa-users-cog"></i><span>Kelola User</span>
-            </a>
-            <a href="<?php echo SITE_URL; ?>/admin/audit-log/index.php" class="nav-item <?php echo ($active_menu ?? '') == 'audit-log' ? 'active' : ''; ?>">
-                <i class="fas fa-history"></i><span>Audit Log</span>
             </a>
             <?php endif; ?>
 

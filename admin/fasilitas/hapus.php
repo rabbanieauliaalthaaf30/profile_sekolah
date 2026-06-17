@@ -10,7 +10,6 @@ if (!$fasilitas) {
 } else {
     if ($fasilitas['foto']) deleteFile(UPLOAD_PATH . 'fasilitas/' . $fasilitas['foto']);
     query("DELETE FROM fasilitas WHERE id = $id");
-    logActivity($_SESSION['user_id'], 'HAPUS', 'fasilitas', $id, "Menghapus fasilitas: " . $fasilitas['nama_fasilitas']);
     setFlash('success', 'Fasilitas berhasil dihapus.');
 }
 

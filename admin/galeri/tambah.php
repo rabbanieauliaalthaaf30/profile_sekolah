@@ -3,6 +3,8 @@ $page_title  = 'Tambah Galeri';
 $active_menu = 'galeri';
 include __DIR__ . '/../includes/header.php';
 
+$kategori_list = ['Akademik', 'Ekstrakurikuler', 'Upacara', 'Olahraga', 'Kompetisi'];
+
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -13,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$judul) $errors[] = 'Judul galeri wajib diisi.';
     if (!$tanggal_kegiatan) $errors[] = 'Tanggal kegiatan wajib diisi.';
+    if (!in_array($kategori, $kategori_list)) $errors[] = 'Kategori tidak valid.';
 
     $foto = '';
     if (!empty($_FILES['foto']['name'])) {
@@ -28,8 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         query("INSERT INTO galeri (judul, deskripsi, foto, kategori, tanggal_kegiatan)
                VALUES ('$judul', '$deskripsi', '$foto', '$kategori', '$tanggal_kegiatan')");
 
-        $new_id = lastInsertId();
-        logActivity($_SESSION['user_id'], 'TAMBAH', 'galeri', $new_id, "Menambah galeri: $judul");
         setFlash('success', 'Galeri berhasil ditambahkan!');
         redirect(SITE_URL . '/admin/galeri/index.php');
     }
@@ -61,8 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Kategori</label>
-                            <input type="text" name="kategori" class="form-control" placeholder="Contoh: Olahraga, Seni, Akademik" value="<?php echo isset($_POST['kategori']) ? clean($_POST['kategori']) : ''; ?>">
+                            <label class="form-label">Kategori <span class="text-danger">*</span></label>
+                            <select name="kategori" class="form-select" required>
+                                <option value="">-- Pilih Kategori --</option>
+                                <?php foreach ($kategori_list as $kat): ?>
+                                <option value="<?php echo $kat; ?>" <?php echo (isset($_POST['kategori']) && $_POST['kategori'] == $kat) ? 'selected' : ''; ?>>
+                                    <?php echo $kat; ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Tanggal Kegiatan <span class="text-danger">*</span></label>

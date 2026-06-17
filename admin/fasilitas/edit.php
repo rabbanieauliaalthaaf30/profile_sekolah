@@ -36,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                foto='$foto', urutan=$urutan
                WHERE id=$id");
 
-        logActivity($_SESSION['user_id'], 'EDIT', 'fasilitas', $id, "Mengedit fasilitas: $nama_fasilitas");
         setFlash('success', 'Fasilitas berhasil diperbarui!');
         redirect(SITE_URL . '/admin/fasilitas/index.php');
     }

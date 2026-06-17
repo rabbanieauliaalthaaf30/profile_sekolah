@@ -69,14 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                    akreditasi='$akreditasi', logo='$logo', foto_gedung='$foto_gedung',
                    kepala_sekolah_foto='$kepala_sekolah_foto'
                    WHERE id={$profil['id']}");
-            logActivity($_SESSION['user_id'], 'EDIT', 'profil_sekolah', $profil['id'], "Memperbarui profil sekolah");
         } else {
             // Insert new
             query("INSERT INTO profil_sekolah (nama_sekolah, npsn, sejarah, visi, misi, alamat_lengkap, telepon, email, website,
                    kepala_sekolah_nama, tahun_berdiri, akreditasi, logo, foto_gedung, kepala_sekolah_foto)
                    VALUES ('$nama_sekolah', '$npsn', '$sejarah', '$visi', '$misi', '$alamat_lengkap', '$telepon', '$email', '$website',
                    '$kepala_sekolah_nama', " . ($tahun_berdiri ?: 'NULL') . ", '$akreditasi', '$logo', '$foto_gedung', '$kepala_sekolah_foto')");
-            logActivity($_SESSION['user_id'], 'TAMBAH', 'profil_sekolah', lastInsertId(), "Membuat profil sekolah");
         }
 
         setFlash('success', 'Profil sekolah berhasil disimpan!');

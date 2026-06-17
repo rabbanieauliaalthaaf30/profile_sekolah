@@ -95,24 +95,6 @@ function getFlash() {
     return null;
 }
 
-// Function to log activity (Audit Log)
-function logActivity($user_id, $aksi, $tabel, $id_data = null, $deskripsi = '') {
-    global $conn;
-
-    $user_id    = (int)$user_id;
-    $aksi       = mysqli_real_escape_string($conn, $aksi);
-    $tabel      = mysqli_real_escape_string($conn, $tabel);
-    $id_data    = $id_data !== null ? (int)$id_data : 'NULL';
-    $deskripsi  = mysqli_real_escape_string($conn, $deskripsi);
-    $ip_address = mysqli_real_escape_string($conn, $_SERVER['REMOTE_ADDR'] ?? '');
-    $user_agent = mysqli_real_escape_string($conn, $_SERVER['HTTP_USER_AGENT'] ?? '');
-
-    $id_val = $id_data === 'NULL' ? 'NULL' : $id_data;
-
-    mysqli_query($conn, "INSERT INTO audit_log (user_id, aksi, tabel, id_data, deskripsi, ip_address, user_agent)
-                         VALUES ($user_id, '$aksi', '$tabel', $id_val, '$deskripsi', '$ip_address', '$user_agent')");
-}
-
 // Function to upload file
 function uploadFile($file, $targetDir, $allowedExt = null) {
     if (!isset($file) || $file['error'] != 0) {

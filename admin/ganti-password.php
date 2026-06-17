@@ -27,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $escaped    = escape($hashed_new);
         query("UPDATE users SET password='$escaped' WHERE id=$id");
 
-        logActivity($id, 'EDIT', 'users', $id, "Mengganti password akun sendiri");
         setFlash('success', 'Password berhasil diubah!');
         redirect(SITE_URL . '/admin/ganti-password.php');
     }

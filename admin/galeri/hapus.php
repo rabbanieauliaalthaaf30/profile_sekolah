@@ -10,7 +10,6 @@ if (!$galeri) {
 } else {
     if ($galeri['foto']) deleteFile(UPLOAD_PATH . 'galeri/' . $galeri['foto']);
     query("DELETE FROM galeri WHERE id = $id");
-    logActivity($_SESSION['user_id'], 'HAPUS', 'galeri', $id, "Menghapus galeri: " . $galeri['judul']);
     setFlash('success', 'Galeri berhasil dihapus.');
 }
 

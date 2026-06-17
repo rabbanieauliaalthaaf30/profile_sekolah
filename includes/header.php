@@ -91,22 +91,12 @@ $profil = fetch("SELECT * FROM profil_sekolah LIMIT 1");
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php echo ($current_page ?? '') == 'guru' ? 'active' : ''; ?>" href="<?php echo SITE_URL; ?>/guru.php">
-                            <i class="fas fa-chalkboard-teacher me-1"></i> Guru & Staff
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php echo ($current_page ?? '') == 'berita' ? 'active' : ''; ?>" href="<?php echo SITE_URL; ?>/berita.php">
-                            <i class="fas fa-newspaper me-1"></i> Berita
+                            <i class="fas fa-chalkboard-teacher me-1"></i> Guru
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php echo ($current_page ?? '') == 'galeri' ? 'active' : ''; ?>" href="<?php echo SITE_URL; ?>/galeri.php">
                             <i class="fas fa-images me-1"></i> Galeri
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php echo ($current_page ?? '') == 'prestasi' ? 'active' : ''; ?>" href="<?php echo SITE_URL; ?>/prestasi.php">
-                            <i class="fas fa-trophy me-1"></i> Prestasi
                         </a>
                     </li>
                     <li class="nav-item">

@@ -38,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                VALUES ('$username', '$nama_lengkap', '$email', '$escaped_hash', '$role', '$status')");
 
         $new_id = lastInsertId();
-        logActivity($_SESSION['user_id'], 'TAMBAH', 'users', $new_id, "Menambah user: $username ($role)");
         setFlash('success', "User <strong>$username</strong> berhasil ditambahkan!");
         redirect(SITE_URL . '/admin/users/index.php');
     }

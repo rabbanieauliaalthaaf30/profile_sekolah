@@ -33,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                VALUES ('$nip', '$nama_lengkap', '$mata_pelajaran', '$pendidikan_terakhir', '$email', '$foto', '$status', $urutan)");
 
         $new_id = lastInsertId();
-        logActivity($_SESSION['user_id'], 'TAMBAH', 'guru', $new_id, "Menambah data guru: $nama_lengkap");
         setFlash('success', 'Data guru berhasil ditambahkan!');
         redirect(SITE_URL . '/admin/guru/index.php');
     }

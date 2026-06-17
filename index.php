@@ -3,23 +3,14 @@ $page_title = 'Beranda';
 $current_page = 'home';
 include 'includes/header.php';
 
-// Get latest news
-$latest_news = fetchAll("SELECT b.*, k.nama_kategori, u.nama_lengkap as penulis
-                         FROM berita b
-                         LEFT JOIN kategori_berita k ON b.kategori_id = k.id
-                         LEFT JOIN users u ON b.penulis_id = u.id
-                         WHERE b.status = 'published'
-                         ORDER BY b.tanggal_publish DESC
-                         LIMIT 6");
-
 // Get profil sekolah
 $profil = fetch("SELECT * FROM profil_sekolah LIMIT 1");
 
 // Get statistics
-$total_siswa = 720; // Static or from database
-$total_guru = fetch("SELECT COUNT(*) as total FROM guru WHERE status = 'aktif'")['total'] ?? 0;
-$total_staff = fetch("SELECT COUNT(*) as total FROM staff WHERE status = 'aktif'")['total'] ?? 0;
-$total_prestasi = fetch("SELECT COUNT(*) as total FROM prestasi WHERE tahun >= YEAR(CURDATE()) - 2")['total'] ?? 0;
+$total_siswa  = 720;
+$total_guru   = fetch("SELECT COUNT(*) as total FROM guru WHERE status = 'aktif'")['total'] ?? 0;
+$total_galeri = fetch("SELECT COUNT(*) as total FROM galeri")['total'] ?? 0;
+$total_fasilitas = fetch("SELECT COUNT(*) as total FROM fasilitas")['total'] ?? 0;
 ?>
 
 <!-- Hero Carousel -->
@@ -73,10 +64,10 @@ $total_prestasi = fetch("SELECT COUNT(*) as total FROM prestasi WHERE tahun >= Y
                 <div style="height:600px; background: linear-gradient(135deg, #065f46 0%, #059669 60%, #10b981 100%);"></div>
             <?php endif; ?>
             <div class="carousel-caption">
-                <h2 data-aos="fade-up">Prestasi Membanggakan</h2>
-                <p data-aos="fade-up" data-aos-delay="100">Raih prestasi di berbagai kompetisi akademik dan non-akademik</p>
-                <a href="<?php echo SITE_URL; ?>/prestasi.php" class="btn btn-hero-primary mt-3" data-aos="fade-up" data-aos-delay="200">
-                    <i class="fas fa-trophy me-2"></i>Lihat Prestasi
+                <h2 data-aos="fade-up">Galeri Kegiatan</h2>
+                <p data-aos="fade-up" data-aos-delay="100">Momen-momen berkesan dari berbagai kegiatan sekolah</p>
+                <a href="<?php echo SITE_URL; ?>/galeri.php" class="btn btn-hero-primary mt-3" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-images me-2"></i>Lihat Galeri
                 </a>
             </div>
         </div>
@@ -96,41 +87,30 @@ $total_prestasi = fetch("SELECT COUNT(*) as total FROM prestasi WHERE tahun >= Y
         <div class="row">
             <div class="col-lg-3 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
                 <div class="stat-box">
-                    <div class="stat-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
                     <div class="stat-number" data-target="<?php echo $total_siswa; ?>"><?php echo $total_siswa; ?></div>
                     <div class="stat-label">Siswa Aktif</div>
                 </div>
             </div>
-            
             <div class="col-lg-3 col-md-6 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="100">
                 <div class="stat-box">
-                    <div class="stat-icon">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                    </div>
+                    <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
                     <div class="stat-number" data-target="<?php echo $total_guru; ?>"><?php echo $total_guru; ?></div>
                     <div class="stat-label">Guru Profesional</div>
                 </div>
             </div>
-            
             <div class="col-lg-3 col-md-6 mb-4 mb-md-0" data-aos="fade-up" data-aos-delay="200">
                 <div class="stat-box">
-                    <div class="stat-icon">
-                        <i class="fas fa-user-tie"></i>
-                    </div>
-                    <div class="stat-number" data-target="<?php echo $total_staff; ?>"><?php echo $total_staff; ?></div>
-                    <div class="stat-label">Staff Administrasi</div>
+                    <div class="stat-icon"><i class="fas fa-images"></i></div>
+                    <div class="stat-number" data-target="<?php echo $total_galeri; ?>"><?php echo $total_galeri; ?></div>
+                    <div class="stat-label">Foto Galeri</div>
                 </div>
             </div>
-            
             <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
                 <div class="stat-box">
-                    <div class="stat-icon">
-                        <i class="fas fa-trophy"></i>
-                    </div>
-                    <div class="stat-number" data-target="<?php echo $total_prestasi; ?>"><?php echo $total_prestasi; ?></div>
-                    <div class="stat-label">Prestasi Diraih</div>
+                    <div class="stat-icon"><i class="fas fa-building"></i></div>
+                    <div class="stat-number" data-target="<?php echo $total_fasilitas; ?>"><?php echo $total_fasilitas; ?></div>
+                    <div class="stat-label">Fasilitas Sekolah</div>
                 </div>
             </div>
         </div>
@@ -183,66 +163,45 @@ $total_prestasi = fetch("SELECT COUNT(*) as total FROM prestasi WHERE tahun >= Y
     </div>
 </section>
 
-<!-- Berita Terbaru -->
+<!-- Galeri Singkat -->
+<?php $galeri_preview = fetchAll("SELECT * FROM galeri ORDER BY tanggal_kegiatan DESC LIMIT 6"); ?>
+<?php if (!empty($galeri_preview)): ?>
 <section class="section bg-light">
     <div class="container">
         <div class="text-center mb-5" data-aos="fade-up">
-            <h2 class="section-title">Berita Terbaru</h2>
-            <p class="section-subtitle">Informasi dan kegiatan terkini dari sekolah</p>
+            <h2 class="section-title">Galeri Kegiatan</h2>
+            <p class="section-subtitle">Momen berkesan dari berbagai kegiatan sekolah</p>
         </div>
-        
-        <div class="row g-4">
-            <?php if (empty($latest_news)): ?>
-                <div class="col-12 text-center">
-                    <p class="text-muted">Belum ada berita tersedia.</p>
-                </div>
-            <?php else: ?>
-                <?php foreach ($latest_news as $index => $news): ?>
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="<?php echo $index * 100; ?>">
-                    <div class="card news-card h-100">
-                        <div class="card-img-wrapper">
-                            <?php $img_news = !empty($news['foto_utama']) ? SITE_URL . '/uploads/berita/' . clean($news['foto_utama']) : ''; ?>
-                            <?php if ($img_news): ?>
-                            <img src="<?php echo $img_news; ?>" class="card-img-top" alt="<?php echo clean($news['judul']); ?>">
-                            <?php else: ?>
-                            <div class="card-img-top d-flex align-items-center justify-content-center" style="height:200px; background:linear-gradient(135deg,#dbeafe,#bfdbfe); color:#2563eb;">
-                                <i class="fas fa-newspaper fa-3x opacity-50"></i>
-                            </div>
-                            <?php endif; ?>
-                            <span class="card-badge"><?php echo clean($news['nama_kategori'] ?? 'Umum'); ?></span>
-                        </div>
-                        <div class="card-body">
-                            <div class="news-meta">
-                                <span><i class="far fa-calendar"></i> <?php echo formatTanggal($news['tanggal_publish']); ?></span>
-                                <span><i class="far fa-eye"></i> <?php echo $news['views']; ?></span>
-                            </div>
-                            <h5 class="news-title">
-                                <a href="<?php echo SITE_URL; ?>/berita-detail.php?slug=<?php echo $news['slug']; ?>">
-                                    <?php echo clean($news['judul']); ?>
-                                </a>
-                            </h5>
-                            <p class="news-excerpt">
-                                <?php echo clean(limitText($news['ringkasan'] ?? strip_tags($news['konten']), 120)); ?>
-                            </p>
-                            <a href="<?php echo SITE_URL; ?>/berita-detail.php?slug=<?php echo $news['slug']; ?>" class="btn-read-more">
-                                Baca Selengkapnya <i class="fas fa-arrow-right"></i>
-                            </a>
+        <div class="row g-3">
+            <?php foreach ($galeri_preview as $i => $g): ?>
+            <?php $img = !empty($g['foto']) ? SITE_URL . '/uploads/galeri/' . clean($g['foto']) : ''; ?>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="<?php echo ($i % 3) * 100; ?>">
+                <div class="gallery-item">
+                    <?php if ($img): ?>
+                    <img src="<?php echo $img; ?>" alt="<?php echo clean($g['judul']); ?>" class="gallery-img">
+                    <?php else: ?>
+                    <div class="gallery-img d-flex align-items-center justify-content-center" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe); color:#2563eb; height:250px;">
+                        <i class="fas fa-image fa-3x opacity-50"></i>
+                    </div>
+                    <?php endif; ?>
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h5 class="gallery-title"><?php echo clean($g['judul']); ?></h5>
+                            <p class="gallery-date"><i class="far fa-calendar me-1"></i><?php echo formatTanggal($g['tanggal_kegiatan']); ?></p>
                         </div>
                     </div>
                 </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
+            </div>
+            <?php endforeach; ?>
         </div>
-        
-        <?php if (!empty($latest_news)): ?>
         <div class="text-center mt-5" data-aos="fade-up">
-            <a href="<?php echo SITE_URL; ?>/berita.php" class="btn btn-primary btn-lg">
-                <i class="fas fa-newspaper me-2"></i>Lihat Semua Berita
+            <a href="<?php echo SITE_URL; ?>/galeri.php" class="btn btn-primary btn-lg">
+                <i class="fas fa-images me-2"></i>Lihat Semua Galeri
             </a>
         </div>
-        <?php endif; ?>
     </div>
 </section>
+<?php endif; ?>
 
 <!-- Visi Misi -->
 <section class="section">

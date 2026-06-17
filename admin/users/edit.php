@@ -39,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                role='$role', status='$status'
                WHERE id=$id");
 
-        logActivity($_SESSION['user_id'], 'EDIT', 'users', $id, "Mengedit user: $username");
         setFlash('success', 'Data user berhasil diperbarui!');
         redirect(SITE_URL . '/admin/users/index.php');
     }

@@ -42,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                status='$status', urutan=$urutan
                WHERE id=$id");
 
-        logActivity($_SESSION['user_id'], 'EDIT', 'guru', $id, "Mengedit data guru: $nama_lengkap");
         setFlash('success', 'Data guru berhasil diperbarui!');
         redirect(SITE_URL . '/admin/guru/index.php');
     }

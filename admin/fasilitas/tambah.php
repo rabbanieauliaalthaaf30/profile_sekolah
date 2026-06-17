@@ -28,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                VALUES ('$nama_fasilitas', '$deskripsi', '$foto', $urutan)");
 
         $new_id = lastInsertId();
-        logActivity($_SESSION['user_id'], 'TAMBAH', 'fasilitas', $new_id, "Menambah fasilitas: $nama_fasilitas");
         setFlash('success', 'Fasilitas berhasil ditambahkan!');
         redirect(SITE_URL . '/admin/fasilitas/index.php');
     }

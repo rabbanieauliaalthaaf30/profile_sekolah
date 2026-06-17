@@ -29,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['foto']      = $user['foto_profil'];
 
             // Log activity
-            logActivity($user['id'], 'LOGIN', 'users', $user['id'], 'User login berhasil');
 
             // Triple redirect: header + JS + meta refresh
             session_write_close();

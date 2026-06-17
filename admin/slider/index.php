@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Convert/rename ke jpg
             rename($old_path, $new_path);
 
-            logActivity($_SESSION['user_id'], 'EDIT', 'slider', $slide_no, "Upload foto slide $slide_no");
             setFlash('success', "Foto Slide $slide_no berhasil diupload!");
             redirect(SITE_URL . '/admin/slider/index.php');
         } else {
@@ -47,7 +46,6 @@ if (isset($_GET['hapus'])) {
         $path = UPLOAD_PATH . 'slider/slide' . $no . '.jpg';
         if (file_exists($path)) {
             unlink($path);
-            logActivity($_SESSION['user_id'], 'HAPUS', 'slider', $no, "Hapus foto slide $no");
             setFlash('success', "Foto Slide $no berhasil dihapus.");
         }
     }

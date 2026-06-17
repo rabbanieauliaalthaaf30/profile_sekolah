@@ -14,7 +14,6 @@ if (!$kontak) {
 // Otomatis mark as read saat dibuka
 if ($kontak['status'] === 'belum_dibaca') {
     query("UPDATE kontak_masuk SET status = 'sudah_dibaca' WHERE id = $id");
-    logActivity($_SESSION['user_id'], 'BACA', 'kontak_masuk', $id, "Membaca pesan dari: " . $kontak['nama_pengirim']);
 }
 ?>
 

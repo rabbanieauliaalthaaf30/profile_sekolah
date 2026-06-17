@@ -3,6 +3,8 @@ $page_title  = 'Edit Galeri';
 $active_menu = 'galeri';
 include __DIR__ . '/../includes/header.php';
 
+$kategori_list = ['Akademik', 'Ekstrakurikuler', 'Upacara', 'Olahraga', 'Kompetisi'];
+
 $id     = (int)($_GET['id'] ?? 0);
 $galeri = fetch("SELECT * FROM galeri WHERE id = $id");
 if (!$galeri) {
@@ -20,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$judul) $errors[] = 'Judul galeri wajib diisi.';
     if (!$tanggal_kegiatan) $errors[] = 'Tanggal kegiatan wajib diisi.';
+    if (!in_array($kategori, $kategori_list)) $errors[] = 'Kategori tidak valid.';
 
     $foto = $galeri['foto'];
     if (!empty($_FILES['foto']['name'])) {
@@ -37,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                kategori='$kategori', tanggal_kegiatan='$tanggal_kegiatan'
                WHERE id=$id");
 
-        logActivity($_SESSION['user_id'], 'EDIT', 'galeri', $id, "Mengedit galeri: $judul");
         setFlash('success', 'Galeri berhasil diperbarui!');
         redirect(SITE_URL . '/admin/galeri/index.php');
     }
@@ -70,8 +72,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Kategori</label>
-                            <input type="text" name="kategori" class="form-control" value="<?php echo clean($galeri['kategori'] ?? ''); ?>">
+                            <label class="form-label">Kategori <span class="text-danger">*</span></label>
+                            <select name="kategori" class="form-select" required>
+                                <option value="">-- Pilih Kategori --</option>
+                                <?php foreach ($kategori_list as $kat): ?>
+                                <option value="<?php echo $kat; ?>" <?php echo ($galeri['kategori'] == $kat) ? 'selected' : ''; ?>>
+                                    <?php echo $kat; ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Tanggal Kegiatan <span class="text-danger">*</span></label>

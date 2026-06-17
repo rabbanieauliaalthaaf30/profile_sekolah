@@ -16,7 +16,6 @@ if (!$user) {
     setFlash('danger', 'User tidak ditemukan.');
 } else {
     query("DELETE FROM users WHERE id = $id");
-    logActivity($_SESSION['user_id'], 'HAPUS', 'users', $id, "Menghapus user: " . $user['username']);
     setFlash('success', "User <strong>" . clean($user['username']) . "</strong> berhasil dihapus.");
 }
 

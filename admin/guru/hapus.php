@@ -10,7 +10,6 @@ if (!$guru) {
 } else {
     if ($guru['foto']) deleteFile(UPLOAD_PATH . 'guru/' . $guru['foto']);
     query("DELETE FROM guru WHERE id = $id");
-    logActivity($_SESSION['user_id'], 'HAPUS', 'guru', $id, "Menghapus data guru: " . $guru['nama_lengkap']);
     setFlash('success', 'Data guru berhasil dihapus.');
 }
 

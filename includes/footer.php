@@ -29,8 +29,7 @@
                             <ul class="footer-links">
                                 <li><a href="<?php echo SITE_URL; ?>"><i class="fas fa-chevron-right me-2"></i>Beranda</a></li>
                                 <li><a href="<?php echo SITE_URL; ?>/profil.php"><i class="fas fa-chevron-right me-2"></i>Profil</a></li>
-                                <li><a href="<?php echo SITE_URL; ?>/guru.php"><i class="fas fa-chevron-right me-2"></i>Guru & Staff</a></li>
-                                <li><a href="<?php echo SITE_URL; ?>/berita.php"><i class="fas fa-chevron-right me-2"></i>Berita</a></li>
+                                <li><a href="<?php echo SITE_URL; ?>/guru.php"><i class="fas fa-chevron-right me-2"></i>Guru</a></li>
                                 <li><a href="<?php echo SITE_URL; ?>/galeri.php"><i class="fas fa-chevron-right me-2"></i>Galeri</a></li>
                             </ul>
                         </div>
@@ -41,7 +40,6 @@
                         <div class="footer-widget">
                             <h4 class="footer-title">Informasi</h4>
                             <ul class="footer-links">
-                                <li><a href="<?php echo SITE_URL; ?>/prestasi.php"><i class="fas fa-chevron-right me-2"></i>Prestasi</a></li>
                                 <li><a href="<?php echo SITE_URL; ?>/kontak.php"><i class="fas fa-chevron-right me-2"></i>Kontak</a></li>
                                 <li><a href="<?php echo SITE_URL; ?>/profil.php#fasilitas"><i class="fas fa-chevron-right me-2"></i>Fasilitas</a></li>
                                 <li><a href="<?php echo SITE_URL; ?>/admin/login.php"><i class="fas fa-chevron-right me-2"></i>Login Admin</a></li>

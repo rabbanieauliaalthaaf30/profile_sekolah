@@ -9,7 +9,6 @@ if (!$kontak) {
     setFlash('danger', 'Pesan tidak ditemukan.');
 } else {
     query("DELETE FROM kontak_masuk WHERE id = $id");
-    logActivity($_SESSION['user_id'], 'HAPUS', 'kontak_masuk', $id, "Menghapus pesan dari: " . $kontak['nama_pengirim']);
     setFlash('success', 'Pesan berhasil dihapus.');
 }
 

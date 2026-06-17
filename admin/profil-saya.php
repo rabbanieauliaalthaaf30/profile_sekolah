@@ -39,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user_nama'] = $nama_lengkap;
         $_SESSION['user_email'] = $_POST['email'];
 
-        logActivity($id, 'EDIT', 'users', $id, "Memperbarui profil sendiri");
         setFlash('success', 'Profil berhasil diperbarui!');
         redirect(SITE_URL . '/admin/profil-saya.php');
     }

@@ -3,11 +3,13 @@ $page_title = 'Galeri';
 $current_page = 'galeri';
 include 'includes/header.php';
 
-$kategori_filter = isset($_GET['kategori']) ? escape($_GET['kategori']) : '';
+$kategori_list = ['Akademik', 'Ekstrakurikuler', 'Upacara', 'Olahraga', 'Kompetisi'];
+
+$kategori_filter = isset($_GET['kategori']) && in_array($_GET['kategori'], $kategori_list)
+    ? escape($_GET['kategori']) : '';
 $where = $kategori_filter ? "WHERE kategori = '$kategori_filter'" : '';
 
 $galeri = fetchAll("SELECT * FROM galeri $where ORDER BY tanggal_kegiatan DESC, created_at DESC");
-$kategori_list = fetchAll("SELECT DISTINCT kategori FROM galeri WHERE kategori IS NOT NULL AND kategori != '' ORDER BY kategori ASC");
 
 // Placeholder jika foto tidak tersedia
 $placeholder_img = 'https://via.placeholder.com/600x400?text=Tidak+Ada+Foto';
@@ -31,12 +33,14 @@ $placeholder_img = 'https://via.placeholder.com/600x400?text=Tidak+Ada+Foto';
         <!-- Filter Kategori -->
         <div class="text-center mb-5" data-aos="fade-up">
             <div class="galeri-filter">
-                <button class="btn filter-btn <?php echo !$kategori_filter ? 'active' : ''; ?>" onclick="filterGaleri('all', this)">
+                <button class="btn filter-btn <?php echo !$kategori_filter ? 'active' : ''; ?>"
+                        onclick="filterGaleri('all', this)">
                     Semua
                 </button>
                 <?php foreach ($kategori_list as $kat): ?>
-                <button class="btn filter-btn <?php echo $kategori_filter == $kat['kategori'] ? 'active' : ''; ?>" onclick="filterGaleri('<?php echo clean($kat['kategori']); ?>', this)">
-                    <?php echo clean($kat['kategori']); ?>
+                <button class="btn filter-btn <?php echo $kategori_filter == $kat ? 'active' : ''; ?>"
+                        onclick="filterGaleri('<?php echo $kat; ?>', this)">
+                    <?php echo $kat; ?>
                 </button>
                 <?php endforeach; ?>
             </div>
