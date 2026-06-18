@@ -41,7 +41,9 @@ CREATE TABLE profil_sekolah (
     kepala_sekolah_foto VARCHAR(255),
     tahun_berdiri YEAR,
     akreditasi VARCHAR(5),
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    diedit_oleh INT(11) NULL DEFAULT NULL,
+    CONSTRAINT fk_profil_diedit FOREIGN KEY (diedit_oleh) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ====================================
@@ -58,7 +60,11 @@ CREATE TABLE guru (
     status ENUM('aktif', 'nonaktif') DEFAULT 'aktif',
     urutan INT(11) DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    dibuat_oleh INT(11) NULL DEFAULT NULL,
+    diedit_oleh INT(11) NULL DEFAULT NULL,
+    CONSTRAINT fk_guru_dibuat FOREIGN KEY (dibuat_oleh) REFERENCES users(id) ON DELETE SET NULL,
+    CONSTRAINT fk_guru_diedit FOREIGN KEY (diedit_oleh) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ====================================
@@ -71,7 +77,11 @@ CREATE TABLE galeri (
     foto VARCHAR(255) NOT NULL,
     kategori ENUM('Akademik','Ekstrakurikuler','Upacara','Olahraga','Kompetisi') NOT NULL DEFAULT 'Akademik',
     tanggal_kegiatan DATE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dibuat_oleh INT(11) NULL DEFAULT NULL,
+    diedit_oleh INT(11) NULL DEFAULT NULL,
+    CONSTRAINT fk_galeri_dibuat FOREIGN KEY (dibuat_oleh) REFERENCES users(id) ON DELETE SET NULL,
+    CONSTRAINT fk_galeri_diedit FOREIGN KEY (diedit_oleh) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ====================================
@@ -83,7 +93,11 @@ CREATE TABLE fasilitas (
     deskripsi TEXT,
     foto VARCHAR(255),
     urutan INT(11) DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dibuat_oleh INT(11) NULL DEFAULT NULL,
+    diedit_oleh INT(11) NULL DEFAULT NULL,
+    CONSTRAINT fk_fasilitas_dibuat FOREIGN KEY (dibuat_oleh) REFERENCES users(id) ON DELETE SET NULL,
+    CONSTRAINT fk_fasilitas_diedit FOREIGN KEY (diedit_oleh) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ====================================

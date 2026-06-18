@@ -60,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
+        $diedit_oleh = (int)$_SESSION['user_id'];
         if ($profil) {
             // Update existing
             query("UPDATE profil_sekolah SET
@@ -67,14 +68,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                    alamat_lengkap='$alamat_lengkap', telepon='$telepon', email='$email', website='$website',
                    kepala_sekolah_nama='$kepala_sekolah_nama', tahun_berdiri=" . ($tahun_berdiri ?: 'NULL') . ",
                    akreditasi='$akreditasi', logo='$logo', foto_gedung='$foto_gedung',
-                   kepala_sekolah_foto='$kepala_sekolah_foto'
+                   kepala_sekolah_foto='$kepala_sekolah_foto', diedit_oleh=$diedit_oleh
                    WHERE id={$profil['id']}");
         } else {
             // Insert new
             query("INSERT INTO profil_sekolah (nama_sekolah, npsn, sejarah, visi, misi, alamat_lengkap, telepon, email, website,
-                   kepala_sekolah_nama, tahun_berdiri, akreditasi, logo, foto_gedung, kepala_sekolah_foto)
+                   kepala_sekolah_nama, tahun_berdiri, akreditasi, logo, foto_gedung, kepala_sekolah_foto, diedit_oleh)
                    VALUES ('$nama_sekolah', '$npsn', '$sejarah', '$visi', '$misi', '$alamat_lengkap', '$telepon', '$email', '$website',
-                   '$kepala_sekolah_nama', " . ($tahun_berdiri ?: 'NULL') . ", '$akreditasi', '$logo', '$foto_gedung', '$kepala_sekolah_foto')");
+                   '$kepala_sekolah_nama', " . ($tahun_berdiri ?: 'NULL') . ", '$akreditasi', '$logo', '$foto_gedung', '$kepala_sekolah_foto', $diedit_oleh)");
         }
 
         setFlash('success', 'Profil sekolah berhasil disimpan!');

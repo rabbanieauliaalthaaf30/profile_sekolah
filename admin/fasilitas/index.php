@@ -15,7 +15,13 @@ if ($search) $where .= " AND nama_fasilitas LIKE '%$search%'";
 $total       = fetch("SELECT COUNT(*) as t FROM fasilitas $where")['t'] ?? 0;
 $total_pages = ceil($total / $limit);
 
-$fasilitas = fetchAll("SELECT * FROM fasilitas $where ORDER BY urutan ASC, nama_fasilitas ASC LIMIT $limit OFFSET $offset");
+$fasilitas = fetchAll("SELECT f.*,
+                  ub.nama_lengkap as nama_pembuat,
+                  ue.nama_lengkap as nama_pengedit
+                  FROM fasilitas f
+                  LEFT JOIN users ub ON f.dibuat_oleh = ub.id
+                  LEFT JOIN users ue ON f.diedit_oleh = ue.id
+                  $where ORDER BY f.urutan ASC, f.nama_fasilitas ASC LIMIT $limit OFFSET $offset");
 ?>
 
 <div class="admin-card">
@@ -47,6 +53,7 @@ $fasilitas = fetchAll("SELECT * FROM fasilitas $where ORDER BY urutan ASC, nama_
                     <th>Nama Fasilitas</th>
                     <th>Deskripsi</th>
                     <th width="80">Urutan</th>
+                    <th>Dibuat/Diedit Oleh</th>
                     <th width="100">Aksi</th>
                 </tr>
             </thead>
@@ -82,6 +89,14 @@ $fasilitas = fetchAll("SELECT * FROM fasilitas $where ORDER BY urutan ASC, nama_
                     </td>
                     <td class="text-center">
                         <span class="badge bg-light text-dark border"><?php echo (int)($f['urutan'] ?? 0); ?></span>
+                    </td>
+                    <td style="font-size:12px;">
+                        <?php if ($f['dibuat_oleh']): ?>
+                        <div><i class="fas fa-plus-circle text-success me-1"></i><?php echo clean($f['nama_pembuat'] ?? '-'); ?></div>
+                        <?php endif; ?>
+                        <?php if ($f['diedit_oleh']): ?>
+                        <div class="text-muted"><i class="fas fa-edit text-warning me-1"></i><?php echo clean($f['nama_pengedit'] ?? '-'); ?></div>
+                        <?php endif; ?>
                     </td>
                     <td>
                         <div class="d-flex gap-1">

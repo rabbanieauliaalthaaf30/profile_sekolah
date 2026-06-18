@@ -29,10 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
-        query("INSERT INTO guru (nip, nama_lengkap, mata_pelajaran, pendidikan_terakhir, email, foto, status, urutan)
-               VALUES ('$nip', '$nama_lengkap', '$mata_pelajaran', '$pendidikan_terakhir', '$email', '$foto', '$status', $urutan)");
+        $dibuat_oleh = (int)$_SESSION['user_id'];
+        query("INSERT INTO guru (nip, nama_lengkap, mata_pelajaran, pendidikan_terakhir, email, foto, status, urutan, dibuat_oleh)
+               VALUES ('$nip', '$nama_lengkap', '$mata_pelajaran', '$pendidikan_terakhir', '$email', '$foto', '$status', $urutan, $dibuat_oleh)");
 
-        $new_id = lastInsertId();
         setFlash('success', 'Data guru berhasil ditambahkan!');
         redirect(SITE_URL . '/admin/guru/index.php');
     }

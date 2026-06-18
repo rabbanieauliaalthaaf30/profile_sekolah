@@ -30,7 +30,7 @@ function getFotoGuru($foto, $nama, $folder = 'guru') {
         <nav aria-label="breadcrumb" data-aos="fade-up" data-aos-delay="100">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>">Beranda</a></li>
-                <li class="breadcrumb-item active">Guru & Staff</li>
+                <li class="breadcrumb-item active">Guru</li>
             </ol>
         </nav>
     </div>

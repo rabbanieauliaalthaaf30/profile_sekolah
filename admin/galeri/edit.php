@@ -36,8 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
+        $diedit_oleh = (int)$_SESSION['user_id'];
         query("UPDATE galeri SET judul='$judul', deskripsi='$deskripsi', foto='$foto',
-               kategori='$kategori', tanggal_kegiatan='$tanggal_kegiatan'
+               kategori='$kategori', tanggal_kegiatan='$tanggal_kegiatan', diedit_oleh=$diedit_oleh
                WHERE id=$id");
 
         setFlash('success', 'Galeri berhasil diperbarui!');

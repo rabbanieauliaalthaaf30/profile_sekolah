@@ -37,9 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
+        $diedit_oleh = (int)$_SESSION['user_id'];
         query("UPDATE guru SET nip='$nip', nama_lengkap='$nama_lengkap', mata_pelajaran='$mata_pelajaran',
                pendidikan_terakhir='$pendidikan_terakhir', email='$email', foto='$foto',
-               status='$status', urutan=$urutan
+               status='$status', urutan=$urutan, diedit_oleh=$diedit_oleh
                WHERE id=$id");
 
         setFlash('success', 'Data guru berhasil diperbarui!');

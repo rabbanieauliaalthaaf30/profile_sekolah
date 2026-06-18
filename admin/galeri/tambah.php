@@ -28,8 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
-        query("INSERT INTO galeri (judul, deskripsi, foto, kategori, tanggal_kegiatan)
-               VALUES ('$judul', '$deskripsi', '$foto', '$kategori', '$tanggal_kegiatan')");
+        $dibuat_oleh = (int)$_SESSION['user_id'];
+        query("INSERT INTO galeri (judul, deskripsi, foto, kategori, tanggal_kegiatan, dibuat_oleh)
+               VALUES ('$judul', '$deskripsi', '$foto', '$kategori', '$tanggal_kegiatan', $dibuat_oleh)");
 
         setFlash('success', 'Galeri berhasil ditambahkan!');
         redirect(SITE_URL . '/admin/galeri/index.php');

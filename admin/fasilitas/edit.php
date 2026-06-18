@@ -32,8 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
+        $diedit_oleh = (int)$_SESSION['user_id'];
         query("UPDATE fasilitas SET nama_fasilitas='$nama_fasilitas', deskripsi='$deskripsi',
-               foto='$foto', urutan=$urutan
+               foto='$foto', urutan=$urutan, diedit_oleh=$diedit_oleh
                WHERE id=$id");
 
         setFlash('success', 'Fasilitas berhasil diperbarui!');

@@ -24,10 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
-        query("INSERT INTO fasilitas (nama_fasilitas, deskripsi, foto, urutan)
-               VALUES ('$nama_fasilitas', '$deskripsi', '$foto', $urutan)");
+        $dibuat_oleh = (int)$_SESSION['user_id'];
+        query("INSERT INTO fasilitas (nama_fasilitas, deskripsi, foto, urutan, dibuat_oleh)
+               VALUES ('$nama_fasilitas', '$deskripsi', '$foto', $urutan, $dibuat_oleh)");
 
-        $new_id = lastInsertId();
         setFlash('success', 'Fasilitas berhasil ditambahkan!');
         redirect(SITE_URL . '/admin/fasilitas/index.php');
     }

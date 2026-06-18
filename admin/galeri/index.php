@@ -14,7 +14,13 @@ if ($search) $where .= " AND judul LIKE '%$search%'";
 $total       = fetch("SELECT COUNT(*) as t FROM galeri $where")['t'] ?? 0;
 $total_pages = ceil($total / $limit);
 
-$galeri = fetchAll("SELECT * FROM galeri $where ORDER BY tanggal_kegiatan DESC LIMIT $limit OFFSET $offset");
+$galeri = fetchAll("SELECT g.*,
+                  ub.nama_lengkap as nama_pembuat,
+                  ue.nama_lengkap as nama_pengedit
+                  FROM galeri g
+                  LEFT JOIN users ub ON g.dibuat_oleh = ub.id
+                  LEFT JOIN users ue ON g.diedit_oleh = ue.id
+                  $where ORDER BY g.tanggal_kegiatan DESC LIMIT $limit OFFSET $offset");
 ?>
 
 <div class="admin-card">
@@ -46,6 +52,7 @@ $galeri = fetchAll("SELECT * FROM galeri $where ORDER BY tanggal_kegiatan DESC L
                     <th>Judul</th>
                     <th>Kategori</th>
                     <th>Tanggal Kegiatan</th>
+                    <th>Dibuat/Diedit Oleh</th>
                     <th width="100">Aksi</th>
                 </tr>
             </thead>
@@ -83,6 +90,14 @@ $galeri = fetchAll("SELECT * FROM galeri $where ORDER BY tanggal_kegiatan DESC L
                     </td>
                     <td><span class="badge bg-info text-dark"><?php echo clean($g['kategori'] ?? '-'); ?></span></td>
                     <td style="font-size:12px; white-space:nowrap; color:#64748b;"><?php echo formatTanggal($g['tanggal_kegiatan']); ?></td>
+                    <td style="font-size:12px;">
+                        <?php if ($g['dibuat_oleh']): ?>
+                        <div><i class="fas fa-plus-circle text-success me-1"></i><?php echo clean($g['nama_pembuat'] ?? '-'); ?></div>
+                        <?php endif; ?>
+                        <?php if ($g['diedit_oleh']): ?>
+                        <div class="text-muted"><i class="fas fa-edit text-warning me-1"></i><?php echo clean($g['nama_pengedit'] ?? '-'); ?></div>
+                        <?php endif; ?>
+                    </td>
                     <td>
                         <div class="d-flex gap-1">
                             <a href="<?php echo SITE_URL; ?>/admin/galeri/edit.php?id=<?php echo $g['id']; ?>" class="btn-action btn-edit" title="Edit"><i class="fas fa-edit"></i></a>
