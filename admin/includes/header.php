@@ -52,9 +52,6 @@ $current_user = fetch("SELECT * FROM users WHERE id = " . (int)$_SESSION['user_i
             <a href="<?php echo SITE_URL; ?>/admin/profil/index.php" class="nav-item <?php echo ($active_menu ?? '') == 'profil' ? 'active' : ''; ?>">
                 <i class="fas fa-school"></i><span>Profil Sekolah</span>
             </a>
-            <a href="<?php echo SITE_URL; ?>/admin/slider/index.php" class="nav-item <?php echo ($active_menu ?? '') == 'slider' ? 'active' : ''; ?>">
-                <i class="fas fa-images"></i><span>Slider Homepage</span>
-            </a>
             <a href="<?php echo SITE_URL; ?>/admin/guru/index.php" class="nav-item <?php echo ($active_menu ?? '') == 'guru' ? 'active' : ''; ?>">
                 <i class="fas fa-chalkboard-teacher"></i><span>Data Guru</span>
             </a>
@@ -99,6 +96,11 @@ $current_user = fetch("SELECT * FROM users WHERE id = " . (int)$_SESSION['user_i
                     </span>
                     <?php endif; ?>
                 </a>
+
+                <!-- Theme Toggle -->
+                <button class="theme-toggle" id="themeToggle" title="Ganti Tema">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
 
                 <!-- User Dropdown -->
                 <div class="dropdown">

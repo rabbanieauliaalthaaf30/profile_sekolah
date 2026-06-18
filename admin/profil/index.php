@@ -7,7 +7,47 @@ requireAdmin();
 $profil = fetch("SELECT * FROM profil_sekolah LIMIT 1");
 $errors = [];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// ── Slider config ──
+$slides = [
+    1 => ['label' => 'Slide 1', 'judul' => 'Selamat Datang',    'warna' => '#2563eb'],
+    2 => ['label' => 'Slide 2', 'judul' => 'Fasilitas Sekolah', 'warna' => '#7c3aed'],
+    3 => ['label' => 'Slide 3', 'judul' => 'Galeri Kegiatan',   'warna' => '#059669'],
+];
+
+// ── Handle slider upload ──
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['slide_no'])) {
+    $slide_no = (int)($_POST['slide_no'] ?? 0);
+    if ($slide_no >= 1 && $slide_no <= 3 && !empty($_FILES['foto']['name'])) {
+        $upload = uploadFile($_FILES['foto'], UPLOAD_PATH . 'slider/');
+        if ($upload['success']) {
+            $old_path = UPLOAD_PATH . 'slider/' . $upload['filename'];
+            $new_name = 'slide' . $slide_no . '.jpg';
+            $new_path = UPLOAD_PATH . 'slider/' . $new_name;
+            if (file_exists($new_path)) unlink($new_path);
+            rename($old_path, $new_path);
+            setFlash('success', "Foto Slide $slide_no berhasil diupload!");
+        } else {
+            setFlash('danger', 'Upload gagal: ' . $upload['message']);
+        }
+    }
+    redirect(SITE_URL . '/admin/profil/index.php#slider');
+}
+
+// ── Handle slider hapus ──
+if (isset($_GET['hapus_slide'])) {
+    $no = (int)$_GET['hapus_slide'];
+    if ($no >= 1 && $no <= 3) {
+        $path = UPLOAD_PATH . 'slider/slide' . $no . '.jpg';
+        if (file_exists($path)) {
+            unlink($path);
+            setFlash('success', "Foto Slide $no berhasil dihapus.");
+        }
+    }
+    redirect(SITE_URL . '/admin/profil/index.php#slider');
+}
+
+// ── Handle profil update ──
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nama_sekolah'])) {
     $nama_sekolah        = escape($_POST['nama_sekolah'] ?? '');
     $npsn                = escape($_POST['npsn'] ?? '');
     $sejarah             = escape($_POST['sejarah'] ?? '');
@@ -23,46 +63,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$nama_sekolah) $errors[] = 'Nama sekolah wajib diisi.';
 
-    // Upload Logo
     $logo = $profil['logo'] ?? '';
     if (!empty($_FILES['logo']['name'])) {
         $upload = uploadFile($_FILES['logo'], UPLOAD_PATH . 'logo/');
         if ($upload['success']) {
             if ($logo) deleteFile(UPLOAD_PATH . 'logo/' . $logo);
             $logo = $upload['filename'];
-        } else {
-            $errors[] = 'Logo: ' . $upload['message'];
-        }
+        } else { $errors[] = 'Logo: ' . $upload['message']; }
     }
 
-    // Upload Foto Gedung
     $foto_gedung = $profil['foto_gedung'] ?? '';
     if (!empty($_FILES['foto_gedung']['name'])) {
         $upload2 = uploadFile($_FILES['foto_gedung'], UPLOAD_PATH . 'profil/');
         if ($upload2['success']) {
             if ($foto_gedung) deleteFile(UPLOAD_PATH . 'profil/' . $foto_gedung);
             $foto_gedung = $upload2['filename'];
-        } else {
-            $errors[] = 'Foto gedung: ' . $upload2['message'];
-        }
+        } else { $errors[] = 'Foto gedung: ' . $upload2['message']; }
     }
 
-    // Upload Foto Kepala Sekolah
     $kepala_sekolah_foto = $profil['kepala_sekolah_foto'] ?? '';
     if (!empty($_FILES['kepala_sekolah_foto']['name'])) {
         $upload3 = uploadFile($_FILES['kepala_sekolah_foto'], UPLOAD_PATH . 'profil/');
         if ($upload3['success']) {
             if ($kepala_sekolah_foto) deleteFile(UPLOAD_PATH . 'profil/' . $kepala_sekolah_foto);
             $kepala_sekolah_foto = $upload3['filename'];
-        } else {
-            $errors[] = 'Foto kepala sekolah: ' . $upload3['message'];
-        }
+        } else { $errors[] = 'Foto kepala sekolah: ' . $upload3['message']; }
     }
 
     if (empty($errors)) {
         $diedit_oleh = (int)$_SESSION['user_id'];
         if ($profil) {
-            // Update existing
             query("UPDATE profil_sekolah SET
                    nama_sekolah='$nama_sekolah', npsn='$npsn', sejarah='$sejarah', visi='$visi', misi='$misi',
                    alamat_lengkap='$alamat_lengkap', telepon='$telepon', email='$email', website='$website',
@@ -71,17 +101,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                    kepala_sekolah_foto='$kepala_sekolah_foto', diedit_oleh=$diedit_oleh
                    WHERE id={$profil['id']}");
         } else {
-            // Insert new
             query("INSERT INTO profil_sekolah (nama_sekolah, npsn, sejarah, visi, misi, alamat_lengkap, telepon, email, website,
                    kepala_sekolah_nama, tahun_berdiri, akreditasi, logo, foto_gedung, kepala_sekolah_foto, diedit_oleh)
                    VALUES ('$nama_sekolah', '$npsn', '$sejarah', '$visi', '$misi', '$alamat_lengkap', '$telepon', '$email', '$website',
                    '$kepala_sekolah_nama', " . ($tahun_berdiri ?: 'NULL') . ", '$akreditasi', '$logo', '$foto_gedung', '$kepala_sekolah_foto', $diedit_oleh)");
         }
-
         setFlash('success', 'Profil sekolah berhasil disimpan!');
         redirect(SITE_URL . '/admin/profil/index.php');
     }
-    // Re-populate from POST on error
     $profil = array_merge($profil ?? [], $_POST);
 }
 ?>
@@ -123,6 +150,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="col-12">
                             <label class="form-label">Nama Kepala Sekolah</label>
                             <input type="text" name="kepala_sekolah_nama" class="form-control" placeholder="Nama lengkap beserta gelar" value="<?php echo clean($profil['kepala_sekolah_nama'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Jumlah Siswa Aktif</label>
+                            <input type="number" id="inputTotalSiswa" class="form-control" min="0" placeholder="Contoh: 720"
+                                   onchange="simpanSiswa(this.value)">
                         </div>
                     </div>
                 </div>
@@ -243,6 +275,89 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </form>
 
+<!-- ══════════════════════════════════════
+     SECTION: FOTO SLIDER HOMEPAGE
+═══════════════════════════════════════ -->
+<div class="admin-card mt-4" id="slider">
+    <div class="admin-card-header">
+        <div class="admin-card-title"><i class="fas fa-images"></i> Foto Slider Homepage</div>
+        <a href="<?php echo SITE_URL; ?>" target="_blank" class="btn-add" style="background:#059669;">
+            <i class="fas fa-eye me-1"></i> Preview Website
+        </a>
+    </div>
+    <div class="admin-card-body">
+        <p class="text-muted small mb-4">Upload foto untuk ditampilkan di slider homepage. Ukuran ideal: <strong>1920 × 600 px</strong></p>
+        <div class="row g-4">
+            <?php foreach ($slides as $no => $slide):
+                $file_path = UPLOAD_PATH . 'slider/slide' . $no . '.jpg';
+                $has_foto  = file_exists($file_path);
+                $img_url   = SITE_URL . '/uploads/slider/slide' . $no . '.jpg';
+            ?>
+            <div class="col-lg-4">
+                <div class="border rounded-3 overflow-hidden">
+                    <!-- Preview -->
+                    <div style="position:relative; height:180px; background:<?php echo $slide['warna']; ?>20;">
+                        <?php if ($has_foto): ?>
+                            <img src="<?php echo $img_url; ?>?t=<?php echo filemtime($file_path); ?>"
+                                 alt="<?php echo $slide['label']; ?>"
+                                 style="width:100%; height:180px; object-fit:cover; display:block;">
+                            <a href="?hapus_slide=<?php echo $no; ?>"
+                               class="btn-confirm-delete"
+                               data-name="foto Slide <?php echo $no; ?>"
+                               style="position:absolute; top:8px; right:8px; background:rgba(239,68,68,0.9); color:white; width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; text-decoration:none;"
+                               title="Hapus Foto">
+                                <i class="fas fa-trash" style="font-size:12px;"></i>
+                            </a>
+                            <span style="position:absolute; bottom:8px; left:8px; background:rgba(16,185,129,0.9); color:white; font-size:11px; font-weight:600; padding:2px 10px; border-radius:20px;">
+                                <i class="fas fa-check me-1"></i>Terpasang
+                            </span>
+                        <?php else: ?>
+                            <div style="width:100%; height:180px; background:linear-gradient(135deg,<?php echo $slide['warna']; ?>,<?php echo $slide['warna']; ?>88); display:flex; align-items:center; justify-content:center; flex-direction:column; color:white;">
+                                <i class="fas fa-image" style="font-size:36px; opacity:0.5; margin-bottom:8px;"></i>
+                                <span style="font-size:13px; opacity:0.7;">Belum ada foto</span>
+                            </div>
+                            <span style="position:absolute; bottom:8px; left:8px; background:rgba(107,114,128,0.9); color:white; font-size:11px; font-weight:600; padding:2px 10px; border-radius:20px;">
+                                Warna default
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                    <!-- Form upload -->
+                    <div class="p-3">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <div style="width:10px; height:10px; border-radius:50%; background:<?php echo $slide['warna']; ?>;"></div>
+                            <span class="fw-bold small"><?php echo $slide['label']; ?></span>
+                            <span class="text-muted small">— <?php echo $slide['judul']; ?></span>
+                        </div>
+                        <form method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="slide_no" value="<?php echo $no; ?>">
+                            <input type="file" name="foto" class="form-control form-control-sm mb-2"
+                                   accept="image/jpeg,image/png,image/webp"
+                                   onchange="previewSlide(this,'prev<?php echo $no; ?>')" required>
+                            <img id="prev<?php echo $no; ?>" src="" alt="" class="img-fluid rounded mb-2"
+                                 style="display:none; width:100%; height:80px; object-fit:cover;">
+                            <button type="submit" class="btn btn-primary btn-sm w-100">
+                                <i class="fas fa-upload me-1"></i>
+                                <?php echo $has_foto ? 'Ganti Foto Slide ' . $no : 'Upload Foto Slide ' . $no; ?>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- Tips -->
+        <div class="mt-4 p-3 bg-light rounded-3">
+            <div class="row g-2 text-muted small">
+                <div class="col-md-3"><i class="fas fa-expand-arrows-alt text-primary me-1"></i>Ukuran ideal: <strong>1920×600px</strong></div>
+                <div class="col-md-3"><i class="fas fa-file-image text-primary me-1"></i>Format: JPG, PNG, WEBP</div>
+                <div class="col-md-3"><i class="fas fa-weight text-primary me-1"></i>Maks. ukuran: <strong>5 MB</strong></div>
+                <div class="col-md-3"><i class="fas fa-moon text-primary me-1"></i>Gunakan foto gelap agar teks terbaca</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 function previewImg(input, previewId, placeholderId) {
     if (input.files && input.files[0]) {
@@ -256,6 +371,53 @@ function previewImg(input, previewId, placeholderId) {
         };
         reader.readAsDataURL(input.files[0]);
     }
+}
+
+function previewSlide(input, previewId) {
+    const preview = document.getElementById(previewId);
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// ── Jumlah Siswa via localStorage ──
+(function() {
+    const input = document.getElementById('inputTotalSiswa');
+    if (!input) return;
+    const saved = localStorage.getItem('total_siswa');
+    if (saved !== null && !isNaN(parseInt(saved))) {
+        input.value = parseInt(saved);
+    } else {
+        input.value = 720; // default
+    }
+})();
+
+function simpanSiswa(val) {
+    const n = parseInt(val);
+    if (!isNaN(n) && n >= 0) {
+        localStorage.setItem('total_siswa', n);
+        // Tampilkan toast konfirmasi
+        showToastSiswa('Jumlah siswa berhasil disimpan: ' + n);
+    }
+}
+
+function showToastSiswa(msg) {
+    let toast = document.getElementById('toastSiswa');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toastSiswa';
+        toast.style.cssText = 'position:fixed;bottom:30px;right:30px;z-index:9999;background:#10b981;color:white;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.2);transition:opacity 0.4s;';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = '✓ ' + msg;
+    toast.style.opacity = '1';
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 2500);
 }
 </script>
 

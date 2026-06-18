@@ -131,10 +131,33 @@ $profil = fetch("SELECT * FROM profil_sekolah LIMIT 1");
         .password-toggle:hover { color: #2563eb; }
 
         .bg-shapes { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
-        .shape { position: absolute; border-radius: 50%; opacity: 0.07; background: white; }
-        .shape-1 { width: 300px; height: 300px; top: -100px; right: -80px; }
-        .shape-2 { width: 200px; height: 200px; bottom: -50px; left: -60px; }
-        .shape-3 { width: 150px; height: 150px; top: 50%; left: 10%; }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            animation: bubbleFloat ease-in-out infinite alternate;
+        }
+
+        /* tiap gelembung punya ukuran, posisi, dan durasi berbeda */
+        .b1  { width:320px; height:320px; top:-80px;  right:-60px;  animation-duration:7s;  animation-delay:0s;   }
+        .b2  { width:200px; height:200px; bottom:-60px; left:-50px;  animation-duration:9s;  animation-delay:1s;   }
+        .b3  { width:140px; height:140px; top:45%;    left:8%;       animation-duration:6s;  animation-delay:2s;   }
+        .b4  { width:90px;  height:90px;  top:15%;    left:20%;      animation-duration:8s;  animation-delay:0.5s; }
+        .b5  { width:60px;  height:60px;  bottom:20%; right:15%;     animation-duration:5s;  animation-delay:1.5s; }
+        .b6  { width:110px; height:110px; bottom:10%; right:30%;     animation-duration:10s; animation-delay:3s;   }
+        .b7  { width:70px;  height:70px;  top:30%;    right:10%;     animation-duration:7s;  animation-delay:2.5s; }
+        .b8  { width:50px;  height:50px;  top:60%;    left:40%;      animation-duration:6s;  animation-delay:4s;   }
+        .b9  { width:180px; height:180px; top:70%;    right:-40px;   animation-duration:11s; animation-delay:0.8s; }
+        .b10 { width:80px;  height:80px;  top:5%;     left:45%;      animation-duration:8s;  animation-delay:3.5s; }
+
+        @keyframes bubbleFloat {
+            0%   { transform: translate(0px, 0px) scale(1); }
+            25%  { transform: translate(15px, -20px) scale(1.04); }
+            50%  { transform: translate(-10px, 25px) scale(0.97); }
+            75%  { transform: translate(20px, 10px) scale(1.02); }
+            100% { transform: translate(-15px, -15px) scale(1.05); }
+        }
 
         /* ============ TRANSITION OVERLAY ============ */
         #transitionOverlay {
@@ -221,9 +244,16 @@ $profil = fetch("SELECT * FROM profil_sekolah LIMIT 1");
 </head>
 <body>
     <div class="bg-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-        <div class="shape shape-3"></div>
+        <div class="bubble b1"></div>
+        <div class="bubble b2"></div>
+        <div class="bubble b3"></div>
+        <div class="bubble b4"></div>
+        <div class="bubble b5"></div>
+        <div class="bubble b6"></div>
+        <div class="bubble b7"></div>
+        <div class="bubble b8"></div>
+        <div class="bubble b9"></div>
+        <div class="bubble b10"></div>
     </div>
 
     <!-- Transition Overlay -->

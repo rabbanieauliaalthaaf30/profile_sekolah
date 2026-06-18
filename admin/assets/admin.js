@@ -35,6 +35,32 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }, 4000);
 
+    // ========== DARK MODE ==========
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon   = document.getElementById('themeIcon');
+
+    function applyTheme(isDark) {
+        document.body.classList.toggle('dark-mode', isDark);
+        if (themeIcon) {
+            themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        if (themeToggle) {
+            themeToggle.title = isDark ? 'Mode Terang' : 'Mode Gelap';
+        }
+    }
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('admin_theme');
+    applyTheme(savedTheme === 'dark');
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function () {
+            const isDark = !document.body.classList.contains('dark-mode');
+            applyTheme(isDark);
+            localStorage.setItem('admin_theme', isDark ? 'dark' : 'light');
+        });
+    }
+
     // ========== LOGOUT CONFIRMATION MODAL ==========
     const logoutModal = document.createElement('div');
     logoutModal.id = 'logoutConfirmModal';

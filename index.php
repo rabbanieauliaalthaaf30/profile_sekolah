@@ -88,7 +88,7 @@ $total_fasilitas = fetch("SELECT COUNT(*) as total FROM fasilitas")['total'] ?? 
             <div class="col-lg-3 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
                 <div class="stat-box">
                     <div class="stat-icon"><i class="fas fa-users"></i></div>
-                    <div class="stat-number" data-target="<?php echo $total_siswa; ?>"><?php echo $total_siswa; ?></div>
+                    <div class="stat-number" id="statSiswa" data-target="<?php echo $total_siswa; ?>"><?php echo $total_siswa; ?></div>
                     <div class="stat-label">Siswa Aktif</div>
                 </div>
             </div>
@@ -253,3 +253,16 @@ $total_fasilitas = fetch("SELECT COUNT(*) as total FROM fasilitas")['total'] ?? 
 </section>
 
 <?php include 'includes/footer.php'; ?>
+<script>
+// Baca total siswa dari localStorage, fallback ke nilai default PHP
+(function() {
+    const defaultSiswa = <?php echo $total_siswa; ?>;
+    const saved = localStorage.getItem('total_siswa');
+    const nilai = (saved !== null && !isNaN(parseInt(saved))) ? parseInt(saved) : defaultSiswa;
+    const el = document.getElementById('statSiswa');
+    if (el) {
+        el.setAttribute('data-target', nilai);
+        el.textContent = nilai;
+    }
+})();
+</script>
